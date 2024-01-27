@@ -31,6 +31,7 @@ public class BankService {
                     return transaction;
                 } else {
                     transaction = new Transaction(client.getSaldo(), client.getClientId(), TransactionStatus.DECLINED, "Not enough money to make this transaction");
+                    transactionStorage.addTransaction(transaction);
                     return transaction;
                 }
             }
@@ -60,5 +61,11 @@ public class BankService {
         throw new IllegalArgumentException("The client with this ID, is not registered");
     }
 
+    public ClientStorage getClientStorage() {
+        return clientStorage;
+    }
 
+    public TransactionStorage getTransactionStorage() {
+        return transactionStorage;
+    }
 }
