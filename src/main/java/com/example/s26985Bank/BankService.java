@@ -25,16 +25,17 @@ public class BankService {
             if(client.getClientId().equals(clientId)){
                 if(client.getSaldo() - amountOfMoney > 0){
                     double newSaldo = client.getSaldo() - amountOfMoney;
-                    transaction = new Transaction(newSaldo, client.getClientId(), TransactionStatus.ACCEPTED);
+                    transaction = new Transaction(newSaldo, client.getClientId(), TransactionStatus.ACCEPTED, "accepted");
                     client.setSaldo(newSaldo);
                     transactionStorage.addTransaction(transaction);
                     return transaction;
                 } else {
-                    throw new RuntimeException("Not enough money to make this transaction");
+                    transaction = new Transaction(client.getSaldo(), client.getClientId(), TransactionStatus.DECLINED, "Not enough money to make this transaction");
+                    return transaction;
                 }
             }
         }
-        throw new RuntimeException("The client with this ID, is not registered");
+        throw new IllegalArgumentException("The client with this ID, is not registered");
     }
 
     public Transaction addMoneyToAccount(String clientId, double amountOfMoney){
@@ -42,12 +43,12 @@ public class BankService {
             if(client.getClientId().equals(clientId)){
                 double newSaldo = client.getSaldo() + amountOfMoney;
                 client.setSaldo(newSaldo);
-                Transaction transaction = new Transaction(newSaldo, clientId, TransactionStatus.DECLINED);
+                Transaction transaction = new Transaction(newSaldo, clientId, TransactionStatus.ACCEPTED, "accepted");
                 transactionStorage.addTransaction(transaction);
                 return transaction;
             }
         }
-        throw new RuntimeException("The client with this ID, is not registered");
+        throw new IllegalArgumentException("The client with this ID, is not registered");
     }
 
     public Client getClientInfo(String clientId){
@@ -56,7 +57,7 @@ public class BankService {
                 return client;
             }
         }
-        throw new RuntimeException("The client with this ID, is not registered");
+        throw new IllegalArgumentException("The client with this ID, is not registered");
     }
 
 
